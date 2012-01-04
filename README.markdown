@@ -1,6 +1,27 @@
 # Sparc.Mvc
 This library provides a slightly more flexible alternative to Razor's sections.
 
+The primary goals of this project are:
+* To allow a child page to completely overwrite a block defined in one of its layouts
+* Insert content into a block defined in one of the layouts
+* Conditionally render a block only if a child page also defines the block
+* Define a block once (and never needed to re-define in a nested layout page)
+
+# Usage
+    // Render a block, and require it to be defined (required defaults to false).
+    @RenderBlock("MainHeader", required: true)
+    
+    // Define a block.
+    @DefineBlock("MainHeader").As(@<h1>This is some content</h1>)
+    
+    // Define a block which requires a child view to also define the block.
+    @DefineBlock("MainHeader").Required().As(@<div id="main-header" style="font-size: 3em">Header[ @RenderBlock("MainHeader") ]</div>)
+
+    // Define a block which renders a default message if no child view defines the block.
+    @DefineBlock("MainHeader").IfDefined(@<h1>@RenderBlock("MainHeader")</h1>).Else(@<p>Main header wasn't defined.</p>)
+    
+    // Define a block which overwrites any previous/parent definitions of the block.
+    @DefineBlock("MainHeader").As(@<h1>Hello World!</h1>).OverwriteParents()
 
 # License
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
