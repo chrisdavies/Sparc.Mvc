@@ -9,7 +9,7 @@ The primary goals of this project are:
 * Define a block once (and never needed to re-define in a nested layout page)
 
 # Installing
-Sparc.Mvc is available on NuGet here: http://nuget.org/packages/Sparc.Mvc.dll
+Sparc.Mvc is available on NuGet here: http://nuget.org/packages/Sparc.Mvc
 
 # Usage
 To use, your pages can inherit from Sparc.Mvc.BlockablePage, or you can call Sparc.Mvc.BlockablePage.RenderBlock or Sparc.Mvc.BlockablePage.DefineBlock.  To make your pages inherit from BlockablePage, modify the pages element in your web.config (not the primary web.config) to have this entry: <pages pageBaseType="Sparc.Mvc.BlockablePage">
