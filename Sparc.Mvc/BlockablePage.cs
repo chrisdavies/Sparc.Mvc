@@ -5,7 +5,7 @@
     using System.Web;
     using System.Web.Mvc;
 
-    public abstract class BlockablePage<TModel> : System.Web.Mvc.WebViewPage<TModel> where TModel : class
+    public abstract class BlockablePage<TModel> : WebViewPage<TModel> where TModel : class
     {
         private static Dictionary<string, BlockChain> Blocks
         {
@@ -30,15 +30,17 @@
 
         public static IHtmlString RenderBlock(string name, bool required = false)
         {
-            BlockChain result = null;
+            BlockChain chain = null;
             IHtmlString html = null;
             var blocks = Blocks;
 
-            if (blocks.TryGetValue(name, out result))
+            if (blocks.TryGetValue(name, out chain))
             {
-                blocks[name] = result.InnerResult;
-                html = new MvcHtmlString(result.Render());
-                blocks[name] = result;
+                // Pop this block off the 'stack' to prevent stack-overflow
+                // with nested block calls.
+                blocks[name] = chain.InnerResult;
+                html = new MvcHtmlString(chain.Render());
+                blocks[name] = chain;
             }
             else if (required)
             {

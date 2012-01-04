@@ -17,10 +17,13 @@
         {
             this.name = name;
             this.children = children;
-            children.TryGetValue(name, out innerResult);
+            children.TryGetValue(name, out this.innerResult);
         }
 
-        public BlockChain InnerResult { get { return this.innerResult; } }
+        public BlockChain InnerResult 
+        {
+            get { return this.innerResult; } 
+        }
 
         private bool IsAlreadyDefined
         {
@@ -32,7 +35,10 @@
 
         private Func<dynamic, HelperResult> Content
         {
-            get { return this.content; }
+            get 
+            {
+                return this.content; 
+            }
             set
             {
                 this.content = value;
@@ -81,7 +87,7 @@
 
         public BlockChain Required()
         {
-            if (!IsAlreadyDefined)
+            if (!this.IsAlreadyDefined)
             {
                 throw RequiredException(this.name);
             }
