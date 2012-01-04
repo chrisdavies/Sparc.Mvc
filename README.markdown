@@ -32,6 +32,11 @@ To use, your pages can inherit from Sparc.Mvc.BlockablePage, or you can call Spa
     // Define a block which overwrites any previous/parent definitions of the block.
     @DefineBlock("MainHeader").As(@<h1>Hello World!</h1>).OverwriteParents()
 
+    // Multi-tag definition requires use of Razor's special <text></text> tag.
+    @DefineBlock("MainHeader").As(@<text>
+        <link href="@Url.Content("~/Content/login.less")" rel="stylesheet" type="text/css" />
+        <script src="@Href("~/Scripts/hf.authentication.js")" type="text/javascript"></script>
+    </text>)
 
 # License (MIT)
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
