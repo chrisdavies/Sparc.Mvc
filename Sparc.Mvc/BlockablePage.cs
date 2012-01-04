@@ -23,31 +23,24 @@
             }
         }
 
+        /// <summary>
+        /// Defines a block, to be rendered at a later time.
+        /// </summary>
+        /// <param name="name">The name of the block to be rendered.</param>
+        /// <returns>The block chain.</returns>
         public static BlockChain DefineBlock(string name)
         {
             return new BlockChain(name, Blocks);
         }
 
-        public static IHtmlString RenderBlock(string name, bool required = false)
+        /// <summary>
+        /// Defines and renders a block.
+        /// </summary>
+        /// <param name="name">The name of the block to be rendered.</param>
+        /// <returns>The block chain.</returns>
+        public static BlockChain RenderBlock(string name)
         {
-            BlockChain chain = null;
-            IHtmlString html = null;
-            var blocks = Blocks;
-
-            if (blocks.TryGetValue(name, out chain))
-            {
-                // Pop this block off the 'stack' to prevent stack-overflow
-                // with nested block calls.
-                blocks[name] = chain.InnerResult;
-                html = new MvcHtmlString(chain.Render());
-                blocks[name] = chain;
-            }
-            else if (required)
-            {
-                throw BlockChain.RequiredException(name);
-            }
-
-            return html;
+            return new BlockChainRenderNow(name, Blocks);
         }
     }
 }

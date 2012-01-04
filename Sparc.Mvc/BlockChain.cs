@@ -7,7 +7,6 @@
 
     public class BlockChain : IHtmlString
     {
-        private string name;
         private Func<dynamic, HelperResult> content;
         private bool overwritesParents;
         private BlockChain innerResult;
@@ -15,14 +14,32 @@
 
         public BlockChain(string name, Dictionary<string, BlockChain> children)
         {
-            this.name = name;
+            this.Name = name;
             this.children = children;
             children.TryGetValue(name, out this.innerResult);
         }
-
+        
         public BlockChain InnerResult 
         {
             get { return this.innerResult; } 
+        }
+
+        protected string Name { get; set; }
+
+        protected Func<dynamic, HelperResult> Content
+        {
+            get
+            {
+                return this.content;
+            }
+            set
+            {
+                this.content = value;
+                if (!this.IsAlreadyDefined || !this.InnerResult.overwritesParents)
+                {
+                    this.children[this.Name] = this;
+                }
+            }
         }
 
         private bool IsAlreadyDefined
@@ -33,28 +50,29 @@
             }
         }
 
-        private Func<dynamic, HelperResult> Content
+        public string Render()
         {
-            get 
+            var hasContent = this.Content == null;
+
+            try
             {
-                return this.content; 
+                // Pop this instance from the 'stack' to prevent stack overflow
+                // when children call render on the same block-name.
+                this.children[this.Name] = this.innerResult;
+                return hasContent ? string.Empty : this.Content(null).ToHtmlString();
             }
-            set
+            finally
             {
-                this.content = value;
-                if (!this.IsAlreadyDefined || !this.InnerResult.overwritesParents)
+                // Push this instance back onto the 'stack' now that children
+                // have rendered.
+                if (hasContent)
                 {
-                    this.children[this.name] = this;
+                    this.children[this.Name] = this;
                 }
             }
         }
 
-        public string Render()
-        {
-            return this.Content == null ? string.Empty : this.Content(null).ToHtmlString();
-        }
-
-        public string ToHtmlString()
+        public virtual string ToHtmlString()
         {
             return null;
         }
@@ -89,7 +107,7 @@
         {
             if (!this.IsAlreadyDefined)
             {
-                throw RequiredException(this.name);
+                throw RequiredException(this.Name);
             }
 
             return this;

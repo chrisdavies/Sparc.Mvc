@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="BlockablePage.cs" />
     <Compile Include="BlockChain.cs" />
+    <Compile Include="BlockChainRenderNow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
