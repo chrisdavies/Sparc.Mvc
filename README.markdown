@@ -2,6 +2,7 @@
 This library provides a slightly more flexible alternative to Razor's sections.
 
 The primary goals of this project are:
+
 * To allow a child page to completely overwrite a block defined in one of its layouts
 * Insert content into a block defined in one of the layouts
 * Conditionally render a block only if a child page also defines the block
