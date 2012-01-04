@@ -92,6 +92,11 @@
             return this.IfDefined(this.EscapedContent(literal));
         }
 
+        public BlockChain IfDefined(IHtmlString literal)
+        {
+            return this.IfDefined(d => literal);
+        }
+
         public BlockChain IfDefinedRaw(string literal)
         {
             return this.IfDefined(this.RawContent(literal));
@@ -110,6 +115,11 @@
         public BlockChain Else(string literal)
         {
             return this.Else(this.EscapedContent(literal));
+        }
+
+        public BlockChain Else(IHtmlString literal)
+        {
+            return this.Else(d => literal);
         }
 
         public BlockChain ElseRaw(string literal)
@@ -131,6 +141,11 @@
             }
 
             return this;
+        }
+        
+        public BlockChain As(IHtmlString literal)
+        {
+            return this.As(d => literal);
         }
 
         public BlockChain As(string literal)
@@ -156,12 +171,12 @@
         
         private Func<dynamic, IHtmlString> EscapedContent(string literal)
         {
-            return d => { return new HtmlString(HttpUtility.HtmlEncode(literal)); };
+            return d => new HtmlString(HttpUtility.HtmlEncode(literal));
         }
 
         private Func<dynamic, IHtmlString> RawContent(string literal)
         {
-            return d => { return new HtmlString(literal); };
+            return d => new HtmlString(literal);
         }
     }
 }
