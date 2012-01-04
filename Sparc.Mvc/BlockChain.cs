@@ -3,11 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Web;
-    using System.Web.WebPages;
+    using System.Web.Mvc;
 
     public class BlockChain : IHtmlString
     {
-        private Func<dynamic, HelperResult> content;
+        private Func<dynamic, IHtmlString> content;
         private bool overwritesParents;
         private BlockChain innerResult;
         private Dictionary<string, BlockChain> children;
@@ -26,7 +26,7 @@
 
         protected string Name { get; set; }
 
-        protected Func<dynamic, HelperResult> Content
+        protected Func<dynamic, IHtmlString> Content
         {
             get
             {
@@ -77,7 +77,7 @@
             return null;
         }
 
-        public BlockChain IfDefined(Func<dynamic, HelperResult> content)
+        public BlockChain IfDefined(Func<dynamic, IHtmlString> content)
         {
             if (this.IsAlreadyDefined)
             {
@@ -87,7 +87,17 @@
             return this;
         }
 
-        public BlockChain Else(Func<dynamic, HelperResult> content)
+        public BlockChain IfDefined(string literal)
+        {
+            return this.IfDefined(this.EscapedContent(literal));
+        }
+
+        public BlockChain IfDefinedRaw(string literal)
+        {
+            return this.IfDefined(this.RawContent(literal));
+        }
+
+        public BlockChain Else(Func<dynamic, IHtmlString> content)
         {
             if (this.Content == null)
             {
@@ -95,6 +105,16 @@
             }
 
             return this;
+        }
+
+        public BlockChain Else(string literal)
+        {
+            return this.Else(this.EscapedContent(literal));
+        }
+
+        public BlockChain ElseRaw(string literal)
+        {
+            return this.Else(this.RawContent(literal));
         }
 
         public BlockChain OverwriteParents()
@@ -113,7 +133,17 @@
             return this;
         }
 
-        public BlockChain As(Func<dynamic, HelperResult> content)
+        public BlockChain As(string literal)
+        {
+            return this.As(this.EscapedContent(literal));
+        }
+
+        public BlockChain AsRaw(string literal)
+        {
+            return this.As(this.RawContent(literal));
+        }
+
+        public BlockChain As(Func<dynamic, IHtmlString> content)
         {
             this.Content = content;
             return this;
@@ -122,6 +152,16 @@
         internal static Exception RequiredException(string name)
         {
             return new HttpException("The required section '" + name + "' has not been defined.");
+        }
+        
+        private Func<dynamic, IHtmlString> EscapedContent(string literal)
+        {
+            return d => { return new HtmlString(HttpUtility.HtmlEncode(literal)); };
+        }
+
+        private Func<dynamic, IHtmlString> RawContent(string literal)
+        {
+            return d => { return new HtmlString(literal); };
         }
     }
 }

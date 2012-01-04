@@ -13,3 +13,4 @@ deploy/*
 *.old
 *.debug.css
 *.sdf
+*.nupkg

@@ -16,7 +16,7 @@
                 return this.InnerResult.Render();
             }
 
-            return base.Render();
+            return this.Render();
         }
     }
 }
