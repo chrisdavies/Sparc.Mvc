@@ -10,7 +10,10 @@ The primary goals of this project are:
 
 # Usage
     // Render a block, and require it to be defined (required defaults to false).
-    @RenderBlock("MainHeader", required: true)
+    @RenderBlock("MainHeader").Required()
+    
+    // Define and render a block at the same time, allowing children to insert content into the block.
+    @RenderBlock("MainHeader").As(@<h1>Hello @RenderBlock("MainHeader")</h1>)
     
     // Define a block.
     @DefineBlock("MainHeader").As(@<h1>This is some content</h1>)
